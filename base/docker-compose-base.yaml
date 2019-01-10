@@ -1,0 +1,172 @@
+version: '2'
+
+networks:
+  default:
+
+services:
+
+  orderer.cogobuy.com:
+    container_name: orderer.cogobuy.com
+#    image: hyperledger/fabric-orderer:$IMAGE_TAG
+    image: hyperledger/fabric-orderer:amd64-1.2.1-snapshot-b43fcc7
+#    image: hyperledger/fabric/images/orderer:$IMAGE_TAG
+    environment:
+      - ORDERER_GENERAL_LOGLEVEL=INFO
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_GENESISMETHOD=file
+      - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/orderer.genesis.block
+#      - ORDERER_GENERAL_GENESISFILE=/home/cogoadmin/go/src/github.com/hyperledger/cogobuyfabric/channel-artifacts/genesis.block
+      - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
+      - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/msp
+#      - ORDERER_GENERAL_LOCALMSPDIR=/home/cogoadmin/go/src/github.com/hyperledger/cogobuyfabric/crypto-config/ordererOrganizations/cogobuy.com/orderers/orderer.cogobuy.com/msp
+      # enabled TLS
+      - ORDERER_GENERAL_TLS_ENABLED=true
+      - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/orderer/tls/server.key
+      - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/orderer/tls/server.crt
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
+#      - ORDERER_GENERAL_TLS_PRIVATEKEY=/home/cogoadmin/go/src/github.com/hyperledger/cogobuyfabric/crypto-config/ordererOrganizations/cogobuy.com/orderers/orderer.cogobuy.com/tls/server.key
+#      - ORDERER_GENERAL_TLS_CERTIFICATE=/home/cogoadmin/go/src/github.com/hyperledger/cogobuyfabric/crypto-config/ordererOrganizations/cogobuy.com/orderers/orderer.cogobuy.com/tls/server.crt
+#      - ORDERER_GENERAL_TLS_ROOTCAS=[/home/cogoadmin/go/src/github.com/hyperledger/cogobuyfabric/crypto-config/ordererOrganizations/cogobuy.com/orderers/orderer.cogobuy.com/tls/ca.crt]
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric
+    command: orderer
+    volumes:
+#    - ./channel-artifacts/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
+    - ../channel-artifacts/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
+    - ../crypto-config/ordererOrganizations/cogobuy.com/orderers/orderer.cogobuy.com/msp:/var/hyperledger/orderer/msp
+    - ../crypto-config/ordererOrganizations/cogobuy.com/orderers/orderer.cogobuy.com/tls/:/var/hyperledger/orderer/tls
+    - orderer.cogobuy.com:/var/hyperledger/production/orderer
+    ports:
+      - 7050:7050
+    networks:
+      default:
+        aliases:
+          - orderer.cogobuy.com
+    
+  peer0.Ingdan.cogobuy.com:
+    container_name: peer0.Ingdan.cogobuy.com
+    extends:
+      file: peer-base.yaml
+      service: peer-base
+    environment:
+      - CORE_PEER_ID=peer0.Ingdan.cogobuy.com
+      - CORE_PEER_ADDRESS=peer0.Ingdan.cogobuy.com:7051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.Ingdan.cogobuy.com:7051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer2.Ingdan.cogobuy.com:7051
+      - CORE_PEER_LOCALMSPID=IngdanMSP
+    volumes:
+        - /var/run/:/host/var/run/
+#        - ./crypto-config/peerOrganizations/Ingdan.cogobuy.com/peers/peer0.Ingdan.cogobuy.com/msp:/etc/hyperledger/fabric/msp
+        - ../crypto-config/peerOrganizations/Ingdan.cogobuy.com/peers/peer0.Ingdan.cogobuy.com/msp:/etc/hyperledger/fabric/msp
+        - ../crypto-config/peerOrganizations/Ingdan.cogobuy.com/peers/peer0.Ingdan.cogobuy.com/tls:/etc/hyperledger/fabric/tls
+        - peer0.Ingdan.cogobuy.com:/var/hyperledger/production
+#        - ./crypto-config/peerOrganizations/Ingdan.cogobuy.com/peers/peer0.Ingdan.cogobuy.com/tls:/etc/hyperledger/fabric/tls
+    ports:
+      - 7051:7051
+      - 7053:7053
+    networks:
+      default:
+        aliases:
+          - peer0.Ingdan.cogobuy.com
+
+  peer1.Ingdan.cogobuy.com:
+    container_name: peer1.Ingdan.cogobuy.com
+    extends:
+      file: peer-base.yaml
+      service: peer-base
+    environment:
+      - CORE_PEER_ID=peer1.Ingdan.cogobuy.com
+      - CORE_PEER_ADDRESS=peer1.Ingdan.cogobuy.com:7051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer2.Ingdan.cogobuy.com:7051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.Ingdan.cogobuy.com:7051
+      - CORE_PEER_LOCALMSPID=IngdanMSP
+    volumes:
+        - /var/run/:/host/var/run/
+        - ../crypto-config/peerOrganizations/Ingdan.cogobuy.com/peers/peer1.Ingdan.cogobuy.com/msp:/etc/hyperledger/fabric/msp
+        - ../crypto-config/peerOrganizations/Ingdan.cogobuy.com/peers/peer1.Ingdan.cogobuy.com/tls:/etc/hyperledger/fabric/tls
+#        - ./crypto-config/peerOrganizations/Ingdan.cogobuy.com/peers/peer1.Ingdan.cogobuy.com/msp:/home/cogoadmin/go/src/github.com/hyperledger/cogobuyfabric/crypto-config/peerOrganizations/Ingdan.cogobuy.com/peers/peer1.Ingdan.cogobuy.com/msp
+#        - ./crypto-config/peerOrganizations/Ingdan.cogobuy.com/peers/peer1.Ingdan.cogobuy.com/tls:/home/cogoadmin/go/src/github.com/hyperledger/cogobuyfabric/crypto-config/peerOrganizations/Ingdan.cogobuy.com/peers/peer1.Ingdan.cogobuy.com/tls
+
+        - peer1.Ingdan.cogobuy.com:/var/hyperledger/production
+    ports:
+      - 8051:7051
+      - 8053:7053
+    networks:
+      default:
+        aliases:
+          - peer1.Ingdan.cogobuy.com
+
+  peer2.Ingdan.cogobuy.com:
+    container_name: peer2.Ingdan.cogobuy.com
+    extends:
+      file: peer-base.yaml
+      service: peer-base
+    environment:
+      - CORE_PEER_ID=peer2.Ingdan.cogobuy.com
+      - CORE_PEER_ADDRESS=peer2.Ingdan.cogobuy.com:7051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.Ingdan.cogobuy.com:7051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.Ingdan.cogobuy.com:7051
+      - CORE_PEER_LOCALMSPID=IngdanMSP
+    volumes:
+        - /var/run/:/host/var/run/
+        - ../crypto-config/peerOrganizations/Ingdan.cogobuy.com/peers/peer2.Ingdan.cogobuy.com/msp:/etc/hyperledger/fabric/msp
+        - ../crypto-config/peerOrganizations/Ingdan.cogobuy.com/peers/peer2.Ingdan.cogobuy.com/tls:/etc/hyperledger/fabric/tls
+#        - ./crypto-config/peerOrganizations/Ingdan.cogobuy.com/peers/peer2.Ingdan.cogobuy.com/msp:/home/cogoadmin/go/src/github.com/hyperledger/cogobuyfabric/crypto-config/peerOrganizations/Ingdan.cogobuy.com/peers/peer2.Ingdan.cogobuy.com/msp
+#        - ./crypto-config/peerOrganizations/Ingdan.cogobuy.com/peers/peer2.Ingdan.cogobuy.com/tls:/home/cogoadmin/go/src/github.com/hyperledger/cogobuyfabric/crypto-config/peerOrganizations/Ingdan.cogobuy.com/peers/peer2.Ingdan.cogobuy.com/tls
+
+        - peer2.Ingdan.cogobuy.com:/var/hyperledger/production
+    ports:
+      - 9051:7051
+      - 9053:7053
+    networks:
+      default:
+        aliases:
+          - peer2.Ingdan.cogobuy.com
+  
+  peer0.Foxsaas.cogobuy.com:
+    container_name: peer0.Foxsaas.cogobuy.com
+    extends:
+      file: peer-base.yaml
+      service: peer-base
+    environment:
+      - CORE_PEER_ID=peer0.Foxsaas.cogobuy.com
+      - CORE_PEER_ADDRESS=peer0.Foxsaas.cogobuy.com:7051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.Foxsaas.cogobuy.com:7051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.Foxsaas.cogobuy.com:7051
+      - CORE_PEER_LOCALMSPID=FoxsaasMSP
+    volumes:
+        - /var/run/:/host/var/run/
+        - ../crypto-config/peerOrganizations/Foxsaas.cogobuy.com/peers/peer0.Foxsaas.cogobuy.com/msp:/etc/hyperledger/fabric/msp
+        - ../crypto-config/peerOrganizations/Foxsaas.cogobuy.com/peers/peer0.Foxsaas.cogobuy.com/tls:/etc/hyperledger/fabric/tls
+        - peer0.Foxsaas.cogobuy.com:/var/hyperledger/production
+    ports:
+      - 10051:7051
+      - 10053:7053
+    networks:
+      default:
+        aliases:
+          - peer0.Foxsaas.cogobuy.com
+
+  peer1.Foxsaas.cogobuy.com:
+    container_name: peer1.Foxsaas.cogobuy.com
+    extends:
+      file: peer-base.yaml
+      service: peer-base
+    environment:
+      - CORE_PEER_ID=peer1.Foxsaas.cogobuy.com
+      - CORE_PEER_ADDRESS=peer1.Foxsaas.cogobuy.com:7051
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.Foxsaas.cogobuy.com:7051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.Foxsaas.cogobuy.com:7051
+      - CORE_PEER_LOCALMSPID=FoxsaasMSP
+    volumes:
+        - /var/run/:/host/var/run/
+        - ../crypto-config/peerOrganizations/Foxsaas.cogobuy.com/peers/peer1.Foxsaas.cogobuy.com/msp:/etc/hyperledger/fabric/msp
+        - ../crypto-config/peerOrganizations/Foxsaas.cogobuy.com/peers/peer1.Foxsaas.cogobuy.com/tls:/etc/hyperledger/fabric/tls
+        - peer1.Foxsaas.cogobuy.com:/var/hyperledger/production
+    ports:
+      - 11051:7051
+      - 11053:7053
+    networks:
+      default:
+        aliases:
+          - peer1.Foxsaas.cogobuy.com
+          
