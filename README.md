@@ -69,8 +69,8 @@ Next to take a look the result
 $ docker images   
 
 Now let's deploy Production Hyperledger Fabric    
-$ cd $GOPATH/src/github.com/hyperledger   
-$ mkdir cogobuyfabric && cd cogobuyfabric
+$ cd $GOPATH/src/github.com/hyperledger       
+$ mkdir cogobuyfabric && cd cogobuyfabric     
 $ sudo vim crypto-config.yaml          #Contents should be referred to file    
 
 
