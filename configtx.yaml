@@ -1,0 +1,76 @@
+################################################################################
+Organizations:
+    - &OrdererOrg
+        Name: OrdererOrg
+        ID: OrdererMSP
+        MSPDir: crypto-config/ordererOrganizations/cogobuy.com/msp
+    
+    - &Ingdan
+        Name: IngdanMSP
+        ID: IngdanMSP
+        MSPDir: crypto-config/peerOrganizations/Ingdan.cogobuy.com/msp
+        AnchorPeers:
+            - Host: peer0.Ingdan.cogobuy.com
+              Port: 7051
+              
+    - &Foxsaas
+        Name: FoxsaasMSP
+        ID: FoxsaasMSP
+        MSPDir: crypto-config/peerOrganizations/Foxsaas.cogobuy.com/msp
+        AnchorPeers:
+            - Host: peer0.Foxsaas.cogobuy.com
+              Port: 7051
+################################################################################
+Capabilities:
+    Channel: &ChannelCapabilities
+        V1_3: true
+    Orderer: &OrdererCapabilities
+        V1_1: true
+    Application: &ApplicationCapabilities
+        V1_3: true
+        V1_2: false
+        V1_1: false
+################################################################################
+Application: &ApplicationDefaults
+################################################################################
+Orderer: &OrdererDefaults
+    OrdererType: solo
+    Addresses:
+        - orderer.cogobuy.com:7050
+    BatchTimeout: 2s
+    BatchSize:
+        MaxMessageCount: 10
+        AbsoluteMaxBytes: 100 MB
+        PreferredMaxBytes: 512 KB
+    MaxChannels: 0
+
+    Kafka:
+        Brokers:
+            - 127.0.0.1:9092
+   
+    Organizations:
+################################################################################
+Profiles:
+    CogobuyOrdererGenesis:
+        Capabilities:
+            <<: *ChannelCapabilities
+        Orderer:
+            <<: *OrdererDefaults
+            Organizations:
+                - *OrdererOrg
+            Capabilities:
+                <<: *OrdererCapabilities
+        Consortiums:
+            SampleConsortium:
+                Organizations:
+                    - *Ingdan
+                    - *Foxsaas
+    CogobuyChannel:
+        Consortium: SampleConsortium
+        Application:
+            <<: *ApplicationDefaults
+            Organizations:
+                - *Ingdan
+                - *Foxsaas
+            Capabilities:
+                <<: *ApplicationCapabilities
