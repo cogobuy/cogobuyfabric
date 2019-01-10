@@ -63,10 +63,10 @@ $ cp ~/go/bin/* .build/docker/gotools/bin
 #Manually compile docker image:    
 $ cd $GOPATH/src/github.com/hyperledger/fabric/      
 $ make docker   
-Next to take a look the result  
+#Next to take a look the result  
 $ docker images   
 
-#Now let's deploy Production Hyperledger Fabric    
+# Now let's deploy Production Hyperledger Fabric    
 $ cd $GOPATH/src/github.com/hyperledger       
 $ mkdir cogobuyfabric && cd cogobuyfabric     
 $ sudo vim crypto-config.yaml          #Contents should be referred to file 
@@ -77,6 +77,14 @@ Ingdan.cogobuy.com
 Foxsaas.cogobuy.com    
 $ tree crypto-config   
 $ sudo vim configtx.yaml             #Contents should be referred to file     
+$ mkdir channel-artifacts            #this folder will keep genesis block and some tx files
+$ sudo /home/cogoadmin/go/src/github.com/hyperledger/fabric/.build/bin/configtxgen -profile CogobuyOrdererGenesis -outputBlock ./channel-artifacts/genesis.block     
+$ sudo /home/cogoadmin/go/src/github.com/hyperledger/fabric/.build/bin/configtxgen -profile CogobuyChannel -outputCreateChannelTx ./channel-artifacts/channel.tx -channelID cogobuy01   
+$ sudo /home/cogoadmin/go/src/github.com/hyperledger/fabric/.build/bin/configtxgen -profile CogobuyChannel -outputAnchorPeersUpdate ./channel-artifacts/IngdanMSPanchors.tx -channelID cogobuy01 -asOrg IngdanMSP  
+$ sudo /home/cogoadmin/go/src/github.com/hyperledger/fabric/.build/bin/configtxgen -profile CogobuyChannel -outputAnchorPeersUpdate ./channel-artifacts/FoxsaasMSPanchors.tx -channelID cogobuy01 -asOrg FoxsaasMSP   
+$ mkdir base && cd base    
+$ sudo vim peer-base.yaml      
+
 
 
 
