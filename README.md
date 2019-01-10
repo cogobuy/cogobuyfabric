@@ -71,6 +71,14 @@ $ docker images
 Now let's deploy Production Hyperledger Fabric    
 $ cd $GOPATH/src/github.com/hyperledger       
 $ mkdir cogobuyfabric && cd cogobuyfabric     
-$ sudo vim crypto-config.yaml          #Contents should be referred to file    
+$ sudo vim crypto-config.yaml          #Contents should be referred to file 
+
+# after prepared crypto-config.yaml file, then run this command to generate lots of certificates    
+$ sudo /home/cogoadmin/go/src/github.com/hyperledger/fabric/.build/bin/cryptogen generate --config=./crypto-config.yaml      
+# if everything goes well, the result should be as follows:
+Ingdan.cogobuy.com    
+Foxsaas.cogobuy.com    
+
+
 
 
