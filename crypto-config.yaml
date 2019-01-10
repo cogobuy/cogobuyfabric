@@ -1,0 +1,22 @@
+OrdererOrgs:
+  - Name: Orderer # Orderer的名称
+    Domain: cogobuy.com # 域名
+    Specs:
+      - Hostname: orderer # hostname + Domain的值组成Orderer节点的完整域名
+
+PeerOrgs:
+  - Name: Ingdan
+    Domain: Ingdan.cogobuy.com
+    EnableNodeOUs: true # 在msp下生成config.yaml文件
+    Template:
+      Count: 3
+    Users:
+      Count: 1
+
+  - Name: Foxsaas
+    Domain: Foxsaas.cogobuy.com
+    EnableNodeOUs: true
+    Template:
+      Count: 2
+    Users:
+      Count: 1
