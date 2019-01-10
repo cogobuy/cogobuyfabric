@@ -83,7 +83,11 @@ $ sudo /home/cogoadmin/go/src/github.com/hyperledger/fabric/.build/bin/configtxg
 $ sudo /home/cogoadmin/go/src/github.com/hyperledger/fabric/.build/bin/configtxgen -profile CogobuyChannel -outputAnchorPeersUpdate ./channel-artifacts/IngdanMSPanchors.tx -channelID cogobuy01 -asOrg IngdanMSP  
 $ sudo /home/cogoadmin/go/src/github.com/hyperledger/fabric/.build/bin/configtxgen -profile CogobuyChannel -outputAnchorPeersUpdate ./channel-artifacts/FoxsaasMSPanchors.tx -channelID cogobuy01 -asOrg FoxsaasMSP   
 $ mkdir base && cd base    
-$ sudo vim peer-base.yaml      
+$ sudo vim peer-base.yaml      #Contents should be referred to file under base folder
+$ sudo vim docker-compose-base.yaml   #Contents should be referred to file under base folder
+$ cd ..        # return to parent directory /cogobuyfabric    
+$ sudo vim docker-compose-cli.yaml   
+
 
 
 
