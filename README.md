@@ -1,7 +1,7 @@
 # cogobuyfabric
 Cogobuy Hyperledger Fabric Project
 
-1st:Prerequisites
+Prerequisites
 Operation System:
 Ubuntu 16.04 LTS, Core: GNU/Linux 4.13.0-36-generic x86_64
 
