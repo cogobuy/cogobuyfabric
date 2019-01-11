@@ -101,7 +101,33 @@ $ sudo vim docker-compose-base.yaml
 #Contents should be referred to file under base folder  
 $ cd ..        
 #return to parent directory /cogobuyfabric    
-$ sudo vim docker-compose-cli.yaml   
+$ sudo vim docker-compose-cli.yaml    
+$ sudo docker-compose -f docker-compose-cli.yaml up -d   
+$ sudo docker-compose -f docker-compose-cli.yaml down   
+
+# Fabric Command Operation,should enter into docker inside
+$ docker exec -it cli bash     
+$ peer channel create -o orderer.cogobuy.com:7050 -c cogobuy01 -f ./channel-artifacts/channel.tx --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/cogobuy.com/orderers/orderer.cogobuy.com/msp/tlscacerts/tlsca.cogobuy.com-cert.pem    
+$ peer channel join -b cogobuy01.block 
+#the above command is just for adding peer0.Ingdan.cogobuy.com into cogobuy01 channel
+$ peer channel list   
+
+
+#then modify below Environment variables step by step, had better confirm last value like      
+$ echo $CORE_PEER_LOCALMSPID     
+
+CORE_PEER_LOCALMSPID=IngdanMSP    
+CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/Ingdan.cogobuy.com/peers/peer1.Ingdan.cogobuy.com/tls/ca.crt     
+CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/Ingdan.cogobuy.com/users/Admin@Ingdan.cogobuy.com/msp     
+CORE_PEER_ADDRESS=peer1.Ingdan.cogobuy.com:7051    
+
+$ peer channel list    
+#looping modify with peer1.Ingdan.cogobuy.com,peer2.Ingdan.cogobuy.com,peer0.Foxsaas.cogobuy.com,peer1.Foxsaas.cogobuy.com    
+
+
+
+
+
 
 
 
