@@ -124,6 +124,9 @@ CORE_PEER_ADDRESS=peer1.Ingdan.cogobuy.com:7051
 $ peer channel list    
 #looping modify with peer1.Ingdan.cogobuy.com,peer2.Ingdan.cogobuy.com,peer0.Foxsaas.cogobuy.com,peer1.Foxsaas.cogobuy.com    
 
+#after revise back to orignial environment variables, then update anchor node setting     
+$ peer channel update -o orderer.cogobuy.com:7050 -c cogobuy01 -f ./channel-artifacts/IngdanMSPanchors.tx --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/cogobuy.com/orderers/orderer.cogobuy.com/msp/tlscacerts/tlsca.cogobuy.com-cert.pem    
+$ peer channel update -o orderer.cogobuy.com:7050 -c cogobuy01 -f ./channel-artifacts/FoxsaasMSPanchors.tx --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/cogobuy.com/orderers/orderer.cogobuy.com/msp/tlscacerts/tlsca.cogobuy.com-cert.pem  
 
 
 
