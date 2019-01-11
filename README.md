@@ -128,7 +128,12 @@ $ peer channel list
 $ peer channel update -o orderer.cogobuy.com:7050 -c cogobuy01 -f ./channel-artifacts/IngdanMSPanchors.tx --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/cogobuy.com/orderers/orderer.cogobuy.com/msp/tlscacerts/tlsca.cogobuy.com-cert.pem    
 $ peer channel update -o orderer.cogobuy.com:7050 -c cogobuy01 -f ./channel-artifacts/FoxsaasMSPanchors.tx --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/cogobuy.com/orderers/orderer.cogobuy.com/msp/tlscacerts/tlsca.cogobuy.com-cert.pem  
 
+#Install chaincode to node peer0   
+$ peer chaincode install -n cogobuy01 -v 1.0 -p github.com/chaincode   
+#then instantiate to channel
+$ peer chaincode instantiate -o orderer.cogobuy.com:7050 --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/cogobuy.com/orderers/orderer.cogobuy.com/msp/tlscacerts/tlsca.cogobuy.com-cert.pem -C cogobuy01 -n cogobuy01 -v 1.0 -c '{"Args":["init","Custx01", "Cogobuy Custx01"]}' -P "OR ('IngdanMSP.peer','FoxsaasMSP.peer')"   
 
+ 
 
 
 
